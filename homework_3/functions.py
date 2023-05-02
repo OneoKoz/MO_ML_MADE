@@ -11,12 +11,14 @@ from scipy.special import expit
 def least_squares_val(x, args):
     A = args[0]
     b = args[1]
-    return (norm(A.dot(x) - b) ** 2) * 1.0 / (2*A.shape[0])
+    return (norm(A.dot(x) - b) ** 2) * 1.0 / (2 * A.shape[0])
+
 
 def least_squares_grad(x, args):
     A = args[0]
     b = args[1]
     return (A.T.dot(A.dot(x)) - A.T.dot(b)) * 1.0 / A.shape[0]
+
 
 def logreg_loss(x, args):
     A = args[0]
@@ -34,7 +36,8 @@ def logreg_loss(x, args):
         degree2 = -A.dot(x) * y
         l = np.logaddexp(degree1, degree2)
     m = y.shape[0]
-    return np.sum(l) / m + l2/2 * norm(x) ** 2
+    return np.sum(l) / m + l2 / 2 * norm(x) ** 2
+
 
 def logreg_grad(x, args):
     A = args[0]
@@ -55,12 +58,20 @@ def logreg_grad(x, args):
     assert len(loss_grad) == len(x)
     return loss_grad + mu * x
 
+
 def logreg_grad_plus_lasso(x, args):
     return logreg_grad(x, args) + args[4] * np.sign(x)
 
+
 def r(x, l1):
     assert (l1 >= 0)
-    return l1 * norm(x, ord = 1)
+    return l1 * norm(x, ord=1)
+
+
+# напишите код в этой ячейке
+def prox_R(x, lamb):
+    return np.maximum(np.abs(x) - lamb, 0) * np.sign(x)
+
 
 def F(x, args):
     return logreg_loss(x, args) + r(x, args[4])
